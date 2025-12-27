@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Afra Fadhma Dinata | Portfolio</title>
+    <style>
+        /* Inline loading styles to show immediately */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        #loader.hidden {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+        .loader-wrapper {
+            text-align: center;
+        }
+        .loader-brand {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 2rem;
+            letter-spacing: -0.05em;
+        }
+        .loader-brand span {
+            background: linear-gradient(135deg, #6366f1 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .loader-line {
+            width: 200px;
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        .loader-line-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #6366f1, #a78bfa);
+            border-radius: 10px;
+            animation: loadProgress 1.2s ease-out forwards;
+        }
+        @keyframes loadProgress {
+            to { width: 100%; }
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="modern.css">
+    <!-- Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Devicon for technology logos -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="loader-wrapper">
+            <div class="loader-brand">Afra<span>.</span></div>
+            <div class="loader-line">
+                <div class="loader-line-fill"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Header dengan Navbar Sticky -->
+    <header id="header">
+        <div class="container">
+            <nav id="navbar">
+                <div class="logo">
+                    <a href="#hero">Afra<span>.</span></a>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#hero" class="nav-link active">Home</a></li>
+                    <li><a href="#about" class="nav-link">About</a></li>
+                    <li><a href="#skills" class="nav-link">Skills</a></li>
+                    <li><a href="#projects" class="nav-link">Projects</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+
+                <div class="menu-toggle">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Floating Theme Toggle -->
+    <div class="theme-toggle-floating" role="button" aria-label="Toggle theme" aria-pressed="false">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="hero" class="section scroll-reveal">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="fade-in glitch" data-text="Afra Fadhma Dinata">Afra Fadhma Dinata</h1>
+                <h2 class="fade-in delay-1">Software Developer</h2>
+                <p class="fade-in delay-2">Creating elegant digital solutions with passion and precision</p>
+                <div class="hero-buttons fade-in delay-3">
+                    <a href="#about" class="btn btn-primary">Discover More</a>
+                    <a href="#contact" class="btn btn-outline">Contact Me</a>
+                </div>
+                <div class="social-icons fade-in delay-4">
+                    <a href="https://instagram.com/afrafdhma" target="_blank" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://github.com/Afra4509" target="_blank" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Animated background orbs -->
+        <div class="bg-orbs" aria-hidden="true">
+            <span class="orb orb-1"></span>
+            <span class="orb orb-2"></span>
+            <span class="orb orb-3"></span>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <div class="arrow">
+                <span></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="about" class="section scroll-reveal">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-wrapper">
+                <div class="about-card">
+                    <div class="about-image-wrapper">
+                        <div class="about-image-container">
+                            <img src="foto/profile.jpg" alt="Afra Fadhma Dinata" class="about-profile-img">
+                            <div class="about-image-glow"></div>
+                        </div>
+                        <div class="about-status">
+                            <span class="status-dot"></span>
+                            Available for work
+                        </div>
+                    </div>
+                    
+                    <div class="about-info">
+                        <div class="about-header">
+                            <h3 class="about-name">Afra Fadhma Dinata</h3>
+                            <p class="about-role">Software Developer</p>
+                        </div>
+                        
+                        <p class="about-bio">
+                            I am a passionate software developer with a keen interest in creating efficient, elegant solutions 
+                            to complex problems. My journey in programming began with curiosity and has evolved into a 
+                            professional pursuit of excellence in software development.
+                        </p>
+                        
+                        <p class="about-bio">
+                            With expertise in multiple programming languages and frameworks, I enjoy the challenge of 
+                            learning new technologies and applying them to create innovative solutions.
+                        </p>
+                        
+                        <div class="about-stats">
+                            <div class="stat-item">
+                                <span class="stat-number" data-count="10">0</span>
+                                <span class="stat-label">Projects</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" data-count="8">0</span>
+                                <span class="stat-label">Technologies</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" data-count="2">0</span>
+                                <span class="stat-label">Years Coding</span>
+                            </div>
+                        </div>
+                        
+                        <div class="about-actions">
+                            <a href="#contact" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                Get In Touch
+                            </a>
+                            <a href="https://github.com/Afra4509" target="_blank" class="btn btn-outline">
+                                <i class="fab fa-github"></i>
+                                View GitHub
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section (Logo Grid) -->
+    <section id="skills" class="section scroll-reveal">
+        <div class="container">
+            <h2 class="section-title">My Skills</h2>
+            <p class="section-description">Tools and technologies I work with</p>
+            <div class="skills-logo-grid">
+                <div class="skill-logo-item">
+                    <i class="devicon-python-plain colored" aria-hidden="true"></i>
+                    <span>Python</span>
+                </div>
+                <div class="skill-logo-item">
+                    <i class="devicon-cplusplus-plain colored" aria-hidden="true"></i>
+                    <span>C++</span>
+                </div>
+                <div class="skill-logo-item">
+                    <i class="devicon-r-original colored" aria-hidden="true"></i>
+                    <span>R</span>
+                </div>
+                <div class="skill-logo-item">
+                    <i class="devicon-html5-plain colored" aria-hidden="true"></i>
+                    <span>HTML5</span>
+                </div>
+                <div class="skill-logo-item">
+                    <i class="devicon-css3-plain colored" aria-hidden="true"></i>
+                    <span>CSS3</span>
+                </div>
+                <div class="skill-logo-item">
+                    <i class="devicon-javascript-plain colored" aria-hidden="true"></i>
+                    <span>JavaScript</span>
+                </div>
+                <div class="skill-logo-item">
+                    <i class="devicon-arduino-plain colored" aria-hidden="true"></i>
+                    <span>Arduino</span>
+                </div>
+                <div class="skill-logo-item">
+                    <i class="devicon-tensorflow-original colored" aria-hidden="true"></i>
+                    <span>TensorFlow</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section scroll-reveal">
+        <div class="container">
+            <h2 class="section-title">My Projects</h2>
+            <p class="section-description">Here are some of my recent works from GitHub</p>
+            
+            <!-- GitHub Projects Container -->
+            <div id="github-projects" class="projects-grid">
+                <!-- Projects will be loaded from GitHub API -->
+                <div class="projects-loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading projects from GitHub...</p>
+                </div>
+            </div>
+            
+            <div class="projects-footer">
+                <a href="https://github.com/Afra4509?tab=repositories" target="_blank" class="btn btn-outline">
+                    <i class="fab fa-github"></i>
+                    View All Repositories
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section scroll-reveal">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <p class="section-subtitle">Have a project in mind? Let's work together!</p>
+            
+            <div class="contact-wrapper">
+                <!-- Left Side - Contact Cards -->
+                <div class="contact-cards">
+                    <!-- Email Card -->
+                    <div class="contact-card glass-card">
+                        <div class="card-glow"></div>
+                        <div class="contact-card-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-card-content">
+                            <span class="contact-label">Email</span>
+                            <h3 class="contact-value">afrafadmadinata@gmail.com</h3>
+                            <a href="mailto:afrafadmadinata@gmail.com" class="contact-action">
+                                <span>Send Email</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Location Card -->
+                    <div class="contact-card glass-card">
+                        <div class="card-glow"></div>
+                        <div class="contact-card-icon location">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-card-content">
+                            <span class="contact-label">Location</span>
+                            <h3 class="contact-value">Pasuruan, East Java</h3>
+                            <a href="https://maps.google.com/?q=Pasuruan,East+Java,Indonesia" target="_blank" class="contact-action">
+                                <span>View on Map</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Social Media Card -->
+                    <div class="contact-card social-card glass-card">
+                        <div class="card-glow"></div>
+                        <div class="contact-card-header">
+                            <div class="contact-card-icon social">
+                                <i class="fas fa-share-alt"></i>
+                            </div>
+                            <div>
+                                <span class="contact-label">Social Media</span>
+                                <h3 class="contact-value">Connect with me</h3>
+                            </div>
+                        </div>
+                        <div class="social-grid">
+                            <a href="https://instagram.com/afrafdhma" target="_blank" class="social-item instagram">
+                                <div class="social-icon-wrapper">
+                                    <i class="fab fa-instagram"></i>
+                                </div>
+                                <div class="social-info">
+                                    <span class="social-name">Instagram</span>
+                                    <span class="social-handle">@afrafdhma</span>
+                                </div>
+                                <i class="fas fa-external-link-alt social-arrow"></i>
+                            </a>
+                            <a href="https://github.com/Afra4509" target="_blank" class="social-item github">
+                                <div class="social-icon-wrapper">
+                                    <i class="fab fa-github"></i>
+                                </div>
+                                <div class="social-info">
+                                    <span class="social-name">GitHub</span>
+                                    <span class="social-handle">Afra4509</span>
+                                </div>
+                                <i class="fas fa-external-link-alt social-arrow"></i>
+                            </a>
+                            <a href="https://id.linkedin.com/in/afra-fadhma-dinata-58a371314" target="_blank" class="social-item linkedin">
+                                <div class="social-icon-wrapper">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </div>
+                                <div class="social-info">
+                                    <span class="social-name">LinkedIn</span>
+                                    <span class="social-handle">Afra Fadhma</span>
+                                </div>
+                                <i class="fas fa-external-link-alt social-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side - Form & Map -->
+                <div class="contact-right">
+                    <!-- Contact Form -->
+                    <div class="contact-form glass-card">
+                        <div class="card-glow"></div>
+                        <div class="form-header">
+                            <h3>Send a Message</h3>
+                            <p>I'll get back to you as soon as possible</p>
+                        </div>
+                        <form id="contactForm">
+                            <!-- Web3Forms integration: replace ACCESS_KEY with your actual key -->
+                            <input type="hidden" name="access_key" value="REPLACE_WITH_YOUR_WEB3FORMS_ACCESS_KEY">
+                            <input type="hidden" name="subject" value="New message from Afra Portfolio">
+                            <input type="hidden" name="from_name" value="Afra Portfolio Contact">
+                            <!-- Honeypot field to prevent bots -->
+                            <input type="checkbox" name="botcheck" class="hidden" style="display:none">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input type="text" id="name" name="name" placeholder="Your name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <input type="text" id="subject" name="user_subject" placeholder="What's this about?">
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" placeholder="Tell me about your project..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn-submit">
+                                <span>Send Message</span>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Map - Full Width at Bottom -->
+            <div class="map-container glass-card map-full-width">
+                <div class="card-glow"></div>
+                <div class="map-header">
+                    <div class="map-pin-pulse"></div>
+                    <span>Pasuruan, East Java, Indonesia</span>
+                </div>
+                <div class="map-wrapper">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126419.87971567!2d112.8534!3d-7.6461!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7d3b56bab3e2b%3A0x6b0f5e2c8e8c8c8c!2sPasuruan%2C%20East%20Java!5e0!3m2!1sen!2sid!4v1640000000000!5m2!1sen!2sid"
+                        width="100%" 
+                        height="100%" 
+                        style="border:0; border-radius: 12px;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="#hero">Afra<span>.</span></a>
+                </div>
+                <p class="copyright">© 2025 Afra Fadhma Dinata. All rights reserved.</p>
+                <div class="footer-social">
+                    <a href="https://instagram.com/afrafdhma" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://github.com/Afra4509" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

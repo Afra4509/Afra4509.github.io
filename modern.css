@@ -1,0 +1,548 @@
+/* =================== MODERN ENHANCEMENTS =================== */
+/* Futuristic Animation & Effects Library */
+
+/* =================== SCROLL REVEAL =================== */
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scroll-reveal.scrolled {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Staggered Children Animation */
+.scroll-reveal.scrolled .skill-logo-item,
+.scroll-reveal.scrolled .project-item,
+.scroll-reveal.scrolled .contact-item {
+    animation: slideUp 0.6s ease forwards;
+    opacity: 0;
+}
+
+.scroll-reveal.scrolled .skill-logo-item:nth-child(1) { animation-delay: 0.1s; }
+.scroll-reveal.scrolled .skill-logo-item:nth-child(2) { animation-delay: 0.15s; }
+.scroll-reveal.scrolled .skill-logo-item:nth-child(3) { animation-delay: 0.2s; }
+.scroll-reveal.scrolled .skill-logo-item:nth-child(4) { animation-delay: 0.25s; }
+.scroll-reveal.scrolled .skill-logo-item:nth-child(5) { animation-delay: 0.3s; }
+.scroll-reveal.scrolled .skill-logo-item:nth-child(6) { animation-delay: 0.35s; }
+.scroll-reveal.scrolled .skill-logo-item:nth-child(7) { animation-delay: 0.4s; }
+.scroll-reveal.scrolled .skill-logo-item:nth-child(8) { animation-delay: 0.45s; }
+
+.scroll-reveal.scrolled .project-item:nth-child(1) { animation-delay: 0.1s; }
+.scroll-reveal.scrolled .project-item:nth-child(2) { animation-delay: 0.2s; }
+.scroll-reveal.scrolled .project-item:nth-child(3) { animation-delay: 0.3s; }
+.scroll-reveal.scrolled .project-item:nth-child(4) { animation-delay: 0.4s; }
+.scroll-reveal.scrolled .project-item:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =================== FADE IN UTILITIES =================== */
+.fade-in {
+    opacity: 0;
+    transform: translateY(25px);
+    animation: fadeUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.fade-in.delay-1 { animation-delay: 0.15s; }
+.fade-in.delay-2 { animation-delay: 0.3s; }
+.fade-in.delay-3 { animation-delay: 0.45s; }
+.fade-in.delay-4 { animation-delay: 0.6s; }
+.fade-in.delay-5 { animation-delay: 0.75s; }
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =================== SKILLS LOGO GRID =================== */
+.skills-logo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 24px;
+    margin-top: 2rem;
+}
+
+.skill-logo-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg, 24px);
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+}
+
+.skill-logo-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.skill-logo-item::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 40%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 60%
+    );
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.skill-logo-item:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: var(--primary-color);
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15), 
+                0 0 0 1px rgba(99, 102, 241, 0.1);
+}
+
+.skill-logo-item:hover::before {
+    opacity: 0.05;
+}
+
+.skill-logo-item:hover::after {
+    transform: translateX(100%);
+}
+
+.skill-logo-item i {
+    font-size: 48px;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    z-index: 1;
+}
+
+.skill-logo-item:hover i {
+    transform: scale(1.2) rotate(5deg);
+}
+
+.skill-logo-item span {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--body-color);
+    position: relative;
+    z-index: 1;
+}
+
+/* =================== NEO-MODERN CARD STYLE =================== */
+.card-neo {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.card-neo::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    right: -100%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+    transform: translate3d(0, 0, 0);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.card-neo:hover::before {
+    opacity: 1;
+    animation: glowMove 3s ease-in-out infinite;
+}
+
+@keyframes glowMove {
+    0%, 100% { transform: translate(-30%, -30%); }
+    50% { transform: translate(30%, 30%); }
+}
+
+/* =================== ANIMATED BACKGROUND ORBS =================== */
+.bg-orbs {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.bg-orbs .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.5;
+}
+
+.bg-orbs .orb-1 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(139, 92, 246, 0.2));
+    top: -10%;
+    left: -5%;
+    animation: floatOrb1 20s ease-in-out infinite;
+}
+
+.bg-orbs .orb-2 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, rgba(34, 211, 238, 0.3), rgba(99, 102, 241, 0.2));
+    bottom: 10%;
+    right: -5%;
+    animation: floatOrb2 25s ease-in-out infinite;
+}
+
+.bg-orbs .orb-3 {
+    width: 250px;
+    height: 250px;
+    background: linear-gradient(135deg, rgba(244, 114, 182, 0.3), rgba(167, 139, 250, 0.2));
+    top: 50%;
+    left: 60%;
+    animation: floatOrb3 18s ease-in-out infinite;
+}
+
+@keyframes floatOrb1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(40px, 60px) scale(1.1); }
+    66% { transform: translate(-30px, 40px) scale(0.95); }
+}
+
+@keyframes floatOrb2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-50px, -40px) scale(1.05); }
+    66% { transform: translate(40px, -60px) scale(0.9); }
+}
+
+@keyframes floatOrb3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-40px, 50px) scale(1.15); }
+}
+
+/* =================== NAVBAR GLASS EFFECT =================== */
+#header {
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    background-color: var(--header-bg);
+}
+
+/* =================== BUTTON ANIMATIONS =================== */
+.btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.btn:active::after {
+    width: 300px;
+    height: 300px;
+}
+
+/* =================== IMAGE HOVER EFFECTS =================== */
+.card-neo .image-container {
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card-neo:hover .image-container {
+    transform: scale(1.02);
+}
+
+/* =================== TEXT REVEAL ANIMATION =================== */
+.text-reveal {
+    overflow: hidden;
+}
+
+.text-reveal span {
+    display: inline-block;
+    transform: translateY(100%);
+    opacity: 0;
+    animation: textReveal 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes textReveal {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* =================== SMOOTH UNDERLINE EFFECT =================== */
+.hover-underline {
+    position: relative;
+}
+
+.hover-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gradient-primary);
+    transition: width 0.3s ease;
+}
+
+.hover-underline:hover::after {
+    width: 100%;
+}
+
+/* =================== MAGNETIC BUTTON EFFECT =================== */
+.btn-magnetic {
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* =================== TILT CARD EFFECT =================== */
+.tilt-card {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.tilt-card:hover {
+    transform: rotateX(5deg) rotateY(5deg);
+}
+
+/* =================== SHIMMER LOADING EFFECT =================== */
+.shimmer {
+    background: linear-gradient(
+        90deg,
+        var(--card-bg) 0%,
+        var(--light-bg) 50%,
+        var(--card-bg) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* =================== MOBILE MENU STYLES =================== */
+@media (max-width: 900px) {
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 100vh;
+        background: var(--card-bg);
+        border-left: 1px solid var(--border-color);
+        padding: 100px 30px 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        box-shadow: -20px 0 40px rgba(0, 0, 0, 0.1);
+        transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        z-index: 998;
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+}
+
+/* =================== CURSOR EFFECTS =================== */
+.custom-cursor {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease, opacity 0.3s ease;
+    mix-blend-mode: difference;
+}
+
+.custom-cursor.active {
+    transform: scale(1.5);
+    opacity: 0.5;
+}
+
+/* =================== SECTION BACKGROUND PATTERNS =================== */
+.pattern-dots {
+    background-image: radial-gradient(circle, var(--border-color) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+.pattern-grid {
+    background-image: 
+        linear-gradient(var(--border-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+/* =================== PARTICLE EFFECT CONTAINER =================== */
+.particles-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: particleFloat 15s infinite linear;
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.3;
+    }
+    90% {
+        opacity: 0.3;
+    }
+    100% {
+        transform: translateY(-100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* =================== SCROLL PROGRESS BAR =================== */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: var(--gradient-primary);
+    z-index: 10000;
+    transition: width 0.1s ease;
+}
+
+/* =================== REDUCED MOTION =================== */
+@media (prefers-reduced-motion: reduce) {
+    .scroll-reveal,
+    .fade-in,
+    .skill-logo-item,
+    .project-item,
+    .btn,
+    .orb,
+    .particle {
+        transition: none !important;
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    
+    .bg-orbs .orb {
+        animation: none !important;
+    }
+}
+
+/* =================== LOADING ANIMATION =================== */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* =================== GRADIENT TEXT =================== */
+.gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* =================== FLOATING ANIMATION =================== */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.floating {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* =================== GLOW EFFECT =================== */
+.glow {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3),
+                0 0 40px rgba(99, 102, 241, 0.2),
+                0 0 60px rgba(99, 102, 241, 0.1);
+}
+
+/* =================== SECTION DIVIDERS =================== */
+.section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+    margin: 0 auto;
+    max-width: 80%;
+}
+
+/* =================== GLASSMORPHISM CARD =================== */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+}
+
+/* =================== STAGGER ANIMATION DELAYS =================== */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
+
+/* =================== FOCUS STYLES FOR ACCESSIBILITY =================== */
+:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.btn:focus-visible,
+.nav-link:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
