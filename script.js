@@ -88,22 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // =================== MAGNETIC BUTTON EFFECT ===================
-    const magneticButtons = document.querySelectorAll('.btn');
-    
-    magneticButtons.forEach(btn => {
-        btn.addEventListener('mousemove', (e) => {
-            const rect = btn.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            
-            btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
-        });
-        
-        btn.addEventListener('mouseleave', () => {
-            btn.style.transform = 'translate(0, 0)';
-        });
-    });
+    // =================== MAGNETIC BUTTON EFFECT (DISABLED - caused layout issues) ===================
+    // Magnetic effect removed to prevent button size/position bugs
 
     // =================== TEXT SCRAMBLE EFFECT ===================
     class TextScramble {
@@ -335,91 +321,90 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // =================== BUTTON RIPPLE EFFECT ===================
-    const buttons = document.querySelectorAll('.btn, .btn-submit');
-    
-    buttons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            const rect = button.getBoundingClientRect();
-            const ripple = document.createElement('span');
-            ripple.className = 'ripple';
-            
-            const size = Math.max(rect.width, rect.height);
-            ripple.style.width = ripple.style.height = size + 'px';
-            ripple.style.left = e.clientX - rect.left - size / 2 + 'px';
-            ripple.style.top = e.clientY - rect.top - size / 2 + 'px';
-            
-            button.appendChild(ripple);
-            
-            setTimeout(() => ripple.remove(), 600);
-        });
-    });
+    // =================== BUTTON RIPPLE EFFECT (DISABLED - caused layout bugs) ===================
+    // Ripple effect removed to prevent button expansion bugs
 
-    // Handle form submission - Real email via Web3Forms
+    // Handle form submission - Email via Web3Forms or mailto fallback
     if (contactForm) {
         contactForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Build FormData from the form
-            const formData = new FormData(contactForm);
+            // Get form values
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const userSubject = document.getElementById('subject').value.trim();
+            const message = document.getElementById('message').value.trim();
             
-            // Optional: append page info
-            formData.append('referer', window.location.href);
+            // Validate required fields
+            if (!name || !email || !message) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Check if Web3Forms access key is configured
+            const accessKeyInput = contactForm.querySelector('input[name="access_key"]');
+            const accessKey = accessKeyInput ? accessKeyInput.value : '';
+            const isValidKey = accessKey && !accessKey.includes('REPLACE') && accessKey.length > 30;
             
             // Show loading state on button
             const submitBtn = contactForm.querySelector('.btn-submit');
-            const originalBtnHTML = submitBtn.innerHTML;
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>Sending...</span><i class="fas fa-spinner fa-spin"></i>';
+            submitBtn.classList.add('loading');
 
-            // Remove any existing status
+            // Remove any existing status message
             const existingMsg = contactForm.querySelector('.form-success');
             if (existingMsg) existingMsg.remove();
             
-            try {
-                const res = await fetch('https://api.web3forms.com/submit', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await res.json();
-                
-                if (data.success) {
-                    // Reset form and show success
-                    contactForm.reset();
-                    const successMsg = document.createElement('div');
-                    successMsg.className = 'form-success';
-                    successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Your message has been sent successfully!';
-                    contactForm.appendChild(successMsg);
+            // Helper function to show success message
+            const showSuccess = () => {
+                contactForm.reset();
+                const successMsg = document.createElement('div');
+                successMsg.className = 'form-success';
+                successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Your message has been sent successfully!';
+                contactForm.appendChild(successMsg);
+                setTimeout(() => {
+                    successMsg.style.opacity = '0';
+                    setTimeout(() => successMsg.remove(), 300);
+                }, 5000);
+            };
+            
+            // Helper function for mailto fallback
+            const openMailto = () => {
+                const subject = encodeURIComponent('[Portfolio] ' + (userSubject || 'New Message'));
+                const body = encodeURIComponent(`From: ${name} <${email}>\n\n${message}`);
+                window.location.href = `mailto:afrafadmadinata@gmail.com?subject=${subject}&body=${body}`;
+                showSuccess();
+            };
+            
+            // If Web3Forms key is valid, try API first
+            if (isValidKey) {
+                try {
+                    const formData = new FormData(contactForm);
+                    formData.append('referer', window.location.href);
                     
-                    setTimeout(() => {
-                        successMsg.style.opacity = '0';
-                        setTimeout(() => successMsg.remove(), 300);
-                    }, 5000);
-                } else {
-                    // Show error feedback
-                    alert('Failed to send message: ' + (data.message || 'Unknown error'));
-                    // Fallback to mailto if API fails
-                    const name = document.getElementById('name').value;
-                    const email = document.getElementById('email').value;
-                    const userSubject = document.getElementById('subject').value;
-                    const message = document.getElementById('message').value;
-                    const mailtoLink = `mailto:afrafadmadinata@gmail.com?subject=${encodeURIComponent('[Portfolio] ' + (userSubject || 'New Message'))}&body=${encodeURIComponent(`From: ${name} <${email}>\n\n${message}`)}`;
-                    window.location.href = mailtoLink;
+                    const res = await fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await res.json();
+                    
+                    if (data.success) {
+                        showSuccess();
+                    } else {
+                        console.warn('Web3Forms error:', data.message);
+                        openMailto();
+                    }
+                } catch (err) {
+                    console.warn('Web3Forms network error:', err);
+                    openMailto();
                 }
-            } catch (err) {
-                alert('Network error: Unable to send your message right now.');
-                console.error('Web3Forms error:', err);
-                // Fallback to mailto on network error
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const userSubject = document.getElementById('subject').value;
-                const message = document.getElementById('message').value;
-                const mailtoLink = `mailto:afrafadmadinata@gmail.com?subject=${encodeURIComponent('[Portfolio] ' + (userSubject || 'New Message'))}&body=${encodeURIComponent(`From: ${name} <${email}>\n\n${message}`)}`;
-                window.location.href = mailtoLink;
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnHTML;
+            } else {
+                // No valid Web3Forms key - use mailto directly
+                openMailto();
             }
+            
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
         });
     }
 
