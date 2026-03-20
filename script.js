@@ -1,733 +1,332 @@
-// Wait for DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
+    'use strict';
+
     // =================== LOADING SCREEN ===================
     const loader = document.getElementById('loader');
-    
-    // Minimum display time for smooth UX
-    const minLoadTime = 1000;
-    const startTime = Date.now();
-    
-    // Hide loader after page loads
+    document.body.classList.add('is-loading');
+
+    const hideLoader = () => {
+        if (loader) {
+            loader.classList.add('hidden');
+            document.body.classList.remove('is-loading');
+            setTimeout(() => { loader.style.display = 'none'; }, 600);
+        }
+    };
+
+    // Hide after page fully loads (with a minimum display time for polish)
+    const loadStart = Date.now();
     window.addEventListener('load', () => {
-        const elapsedTime = Date.now() - startTime;
-        const remainingTime = Math.max(minLoadTime - elapsedTime, 0);
-        
-        setTimeout(() => {
-            if (loader) {
-                loader.classList.add('hidden');
-                // Remove from DOM after transition
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 500);
-            }
-        }, remainingTime);
+        const elapsed = Date.now() - loadStart;
+        const remaining = Math.max(1200 - elapsed, 0);
+        setTimeout(hideLoader, remaining);
     });
+
+    // Safety fallback: hide after 4 seconds no matter what
+    setTimeout(hideLoader, 4000);
 
     // =================== SCROLL PROGRESS BAR ===================
-    const scrollProgress = document.createElement('div');
-    scrollProgress.className = 'scroll-progress';
-    document.body.appendChild(scrollProgress);
-
-    // Get DOM elements
+    const scrollBar = document.getElementById('scrollProgress');
     const navbar = document.getElementById('navbar');
-    const menuToggle = document.querySelector('.menu-toggle');
-    const navLinks = document.querySelector('.nav-links');
-    const themeToggle = document.querySelector('.theme-toggle-floating');
-    const header = document.getElementById('header');
-    const scrollIndicator = document.querySelector('.scroll-indicator');
-    const skillLevels = document.querySelectorAll('.skill-level');
-    const sections = document.querySelectorAll('.section');
-    const navItems = document.querySelectorAll('.nav-link');
-    const contactForm = document.getElementById('contactForm');
 
-    // Check if dark mode is enabled in local storage
-    if (localStorage.getItem('darkMode') === 'enabled') {
-        document.body.classList.add('dark-theme');
-        if (themeToggle) themeToggle.setAttribute('aria-pressed', 'true');
-    } else {
-        if (themeToggle) themeToggle.setAttribute('aria-pressed', 'false');
-    }
-
-    // =================== SCROLL REVEAL ANIMATION ===================
-    const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
-    
-    const revealOnScroll = () => {
-        const windowHeight = window.innerHeight;
-        const revealPoint = 150;
-        
-        scrollRevealElements.forEach(element => {
-            const elementTop = element.getBoundingClientRect().top;
-            
-            if (elementTop < windowHeight - revealPoint) {
-                element.classList.add('revealed');
-            }
-        });
+    const updateScroll = () => {
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = h > 0 ? (window.scrollY / h) * 100 : 0;
+        if (scrollBar) scrollBar.style.width = pct + '%';
+        if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 40);
     };
-    
-    // Initial check on load
-    revealOnScroll();
-    
-    // Check on scroll with throttle for performance
-    let scrollTimeout;
-    window.addEventListener('scroll', () => {
-        if (scrollTimeout) return;
-        scrollTimeout = setTimeout(() => {
-            revealOnScroll();
-            scrollTimeout = null;
-        }, 10);
-    });
 
-    // =================== SMOOTH PARALLAX EFFECT ===================
-    const parallaxElements = document.querySelectorAll('.orb');
-    
-    window.addEventListener('scroll', () => {
-        const scrolled = window.scrollY;
-        parallaxElements.forEach((el, index) => {
-            const speed = 0.1 + (index * 0.05);
-            el.style.transform = `translateY(${scrolled * speed}px)`;
-        });
-    });
+    window.addEventListener('scroll', updateScroll, { passive: true });
+    updateScroll();
 
-    // =================== MAGNETIC BUTTON EFFECT (DISABLED - caused layout issues) ===================
-    // Magnetic effect removed to prevent button size/position bugs
-
-    // =================== TEXT SCRAMBLE EFFECT ===================
-    class TextScramble {
-        constructor(el) {
-            this.el = el;
-            this.chars = '!<>-_\\/[]{}—=+*^?#________';
-            this.update = this.update.bind(this);
-        }
-        
-        setText(newText) {
-            const oldText = this.el.innerText;
-            const length = Math.max(oldText.length, newText.length);
-            const promise = new Promise(resolve => this.resolve = resolve);
-            this.queue = [];
-            
-            for (let i = 0; i < length; i++) {
-                const from = oldText[i] || '';
-                const to = newText[i] || '';
-                const start = Math.floor(Math.random() * 40);
-                const end = start + Math.floor(Math.random() * 40);
-                this.queue.push({ from, to, start, end });
-            }
-            
-            cancelAnimationFrame(this.frameRequest);
-            this.frame = 0;
-            this.update();
-            return promise;
-        }
-        
-        update() {
-            let output = '';
-            let complete = 0;
-            
-            for (let i = 0, n = this.queue.length; i < n; i++) {
-                let { from, to, start, end, char } = this.queue[i];
-                
-                if (this.frame >= end) {
-                    complete++;
-                    output += to;
-                } else if (this.frame >= start) {
-                    if (!char || Math.random() < 0.28) {
-                        char = this.chars[Math.floor(Math.random() * this.chars.length)];
-                        this.queue[i].char = char;
-                    }
-                    output += `<span class="scramble-char">${char}</span>`;
-                } else {
-                    output += from;
-                }
-            }
-            
-            this.el.innerHTML = output;
-            
-            if (complete === this.queue.length) {
-                this.resolve();
-            } else {
-                this.frameRequest = requestAnimationFrame(this.update);
-                this.frame++;
-            }
-        }
-    }
-
-    // Apply scramble effect to hero title on load
-    const heroTitle = document.querySelector('.hero-content h1');
-    if (heroTitle) {
-        const originalText = heroTitle.textContent;
-        const scrambler = new TextScramble(heroTitle);
-        
-        setTimeout(() => {
-            scrambler.setText(originalText);
-        }, 500);
-    }
-
-    // =================== CURSOR TRAIL EFFECT ===================
-    const createCursorTrail = () => {
-        const trail = document.createElement('div');
-        trail.className = 'cursor-trail';
-        document.body.appendChild(trail);
-        
-        let mouseX = 0, mouseY = 0;
-        let trailX = 0, trailY = 0;
-        
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-        
-        const animate = () => {
-            trailX += (mouseX - trailX) * 0.1;
-            trailY += (mouseY - trailY) * 0.1;
-            
-            trail.style.left = trailX + 'px';
-            trail.style.top = trailY + 'px';
-            
-            requestAnimationFrame(animate);
-        };
-        
-        animate();
-    };
-    
-    // Only create cursor trail on non-touch devices
-    if (window.matchMedia('(pointer: fine)').matches) {
-        createCursorTrail();
-    }
-
-    // Function to handle sticky navbar and scroll progress
-    function handleScroll() {
-        // Scroll progress bar
-        const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const scrolled = (window.scrollY / windowHeight) * 100;
-        scrollProgress.style.width = scrolled + '%';
-
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-
-        // Hide scroll indicator on scroll
-        if (scrollIndicator) {
-            if (window.scrollY > 100) {
-                scrollIndicator.style.opacity = '0';
-                scrollIndicator.style.pointerEvents = 'none';
-            } else {
-                scrollIndicator.style.opacity = '1';
-                scrollIndicator.style.pointerEvents = 'auto';
-            }
-        }
-
-        // Activate nav items based on scroll position
-        let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop - 150;
-            const sectionHeight = section.offsetHeight;
-            if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
-                current = section.getAttribute('id');
+    // =================== SCROLL REVEAL (IntersectionObserver) ===================
+    const revealObs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('active');
+                revealObs.unobserve(e.target);
             }
         });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-        navItems.forEach(item => {
-            item.classList.remove('active');
-            if (item.getAttribute('href').slice(1) === current) {
-                item.classList.add('active');
-            }
-        });
-
-        // Animate skill bars when in view
-        skillLevels.forEach(skill => {
-            const skillSection = document.getElementById('skills');
-            if (skillSection) {
-                const sectionTop = skillSection.offsetTop;
-                const sectionHeight = skillSection.offsetHeight;
-                const windowHeight = window.innerHeight;
-                
-                if (window.scrollY > (sectionTop - windowHeight + 200) && window.scrollY < (sectionTop + sectionHeight)) {
-                    const level = skill.getAttribute('data-level');
-                    skill.style.width = `${level}%`;
-                }
-            }
-        });
-    }
-
-    // Mobile menu toggle
-    if (menuToggle) {
-        menuToggle.addEventListener('click', function() {
-            this.classList.toggle('active');
-            navLinks.classList.toggle('active');
-            // Prevent body scroll when menu is open
-            document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
-        });
-    }
-
-    // Close mobile menu when a link is clicked
-    if (navLinks) {
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                menuToggle.classList.remove('active');
-                navLinks.classList.remove('active');
-                document.body.style.overflow = '';
-            });
-        });
-    }
-
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (navLinks && navLinks.classList.contains('active')) {
-            if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
-                menuToggle.classList.remove('active');
-                navLinks.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        }
-    });
-
-    // Dark/Light theme toggle
-    if (themeToggle) {
-        themeToggle.addEventListener('click', function() {
-            document.body.classList.toggle('dark-theme');
-            
-            // Save preference to local storage
-            if (document.body.classList.contains('dark-theme')) {
-                localStorage.setItem('darkMode', 'enabled');
-                this.setAttribute('aria-pressed', 'true');
-            } else {
-                localStorage.setItem('darkMode', null);
-                this.setAttribute('aria-pressed', 'false');
-            }
-        });
-    }
-
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                const headerOffset = 80;
-                const elementPosition = targetElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-
-    // =================== BUTTON RIPPLE EFFECT (DISABLED - caused layout bugs) ===================
-    // Ripple effect removed to prevent button expansion bugs
-
-    // Handle form submission - Email via Web3Forms or mailto fallback
-    if (contactForm) {
-        contactForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Get form values
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const userSubject = document.getElementById('subject').value.trim();
-            const message = document.getElementById('message').value.trim();
-            
-            // Validate required fields
-            if (!name || !email || !message) {
-                alert('Please fill in all required fields.');
-                return;
-            }
-            
-            // Check if Web3Forms access key is configured
-            const accessKeyInput = contactForm.querySelector('input[name="access_key"]');
-            const accessKey = accessKeyInput ? accessKeyInput.value : '';
-            const isValidKey = accessKey && !accessKey.includes('REPLACE') && accessKey.length > 30;
-            
-            // Show loading state on button
-            const submitBtn = contactForm.querySelector('.btn-submit');
-            submitBtn.disabled = true;
-            submitBtn.classList.add('loading');
-
-            // Remove any existing status message
-            const existingMsg = contactForm.querySelector('.form-success');
-            if (existingMsg) existingMsg.remove();
-            
-            // Helper function to show success message
-            const showSuccess = () => {
-                contactForm.reset();
-                const successMsg = document.createElement('div');
-                successMsg.className = 'form-success';
-                successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Your message has been sent successfully!';
-                contactForm.appendChild(successMsg);
-                setTimeout(() => {
-                    successMsg.style.opacity = '0';
-                    setTimeout(() => successMsg.remove(), 300);
-                }, 5000);
-            };
-            
-            // Helper function for mailto fallback
-            const openMailto = () => {
-                const subject = encodeURIComponent('[Portfolio] ' + (userSubject || 'New Message'));
-                const body = encodeURIComponent(`From: ${name} <${email}>\n\n${message}`);
-                window.location.href = `mailto:afrafadmadinata@gmail.com?subject=${subject}&body=${body}`;
-                showSuccess();
-            };
-            
-            // If Web3Forms key is valid, try API first
-            if (isValidKey) {
-                try {
-                    const formData = new FormData(contactForm);
-                    formData.append('referer', window.location.href);
-                    
-                    const res = await fetch('https://api.web3forms.com/submit', {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const data = await res.json();
-                    
-                    if (data.success) {
-                        showSuccess();
-                    } else {
-                        console.warn('Web3Forms error:', data.message);
-                        openMailto();
-                    }
-                } catch (err) {
-                    console.warn('Web3Forms network error:', err);
-                    openMailto();
-                }
-            } else {
-                // No valid Web3Forms key - use mailto directly
-                openMailto();
-            }
-            
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('loading');
-        });
-    }
-
-    // Initial scroll handler call to set initial states
-    handleScroll();
-
-    // Add scroll event listener with throttle for performance
-    let ticking = false;
-    window.addEventListener('scroll', () => {
-        if (!ticking) {
-            requestAnimationFrame(() => {
-                handleScroll();
-                ticking = false;
-            });
-            ticking = true;
-        }
-    });
-
-    // Add scroll reveal animation with IntersectionObserver
-    const scrollElements = document.querySelectorAll('.scroll-reveal');
-    if ('IntersectionObserver' in window) {
-        const io = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('scrolled');
-                }
-            });
-        }, { 
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        });
-        scrollElements.forEach((el) => io.observe(el));
-    } else {
-        // Fallback for older browsers
-        scrollElements.forEach((el) => el.classList.add('scrolled'));
-    }
-
-    // Subtle parallax effect on hero orbs
-    const hero = document.getElementById('hero');
-    const orbs = document.querySelectorAll('.bg-orbs .orb');
-    
-    if (hero && orbs.length > 0) {
-        let rafId;
-        
-        hero.addEventListener('mousemove', (e) => {
-            cancelAnimationFrame(rafId);
-            rafId = requestAnimationFrame(() => {
-                const rect = hero.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width - 0.5;
-                const y = (e.clientY - rect.top) / rect.height - 0.5;
-                
-                orbs.forEach((orb, idx) => {
-                    const strength = (idx + 1) * 15;
-                    orb.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
-                });
-            });
-        });
-
-        hero.addEventListener('mouseleave', () => {
-            cancelAnimationFrame(rafId);
-            orbs.forEach((orb) => {
-                orb.style.transform = 'translate(0, 0)';
-                orb.style.transition = 'transform 0.5s ease';
-            });
-        });
-
-        hero.addEventListener('mouseenter', () => {
-            orbs.forEach((orb) => {
-                orb.style.transition = 'none';
-            });
-        });
-    }
-
-    // Add typing effect to hero subtitle (optional enhancement)
-    const heroSubtitle = document.querySelector('.hero-content h2');
-    if (heroSubtitle && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        const text = heroSubtitle.textContent;
-        heroSubtitle.textContent = '';
-        heroSubtitle.classList.add('typing-active');
-        
-        let i = 0;
-        const typeWriter = () => {
-            if (i < text.length) {
-                heroSubtitle.textContent += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, 80);
-            } else {
-                // Remove cursor after typing
-                setTimeout(() => {
-                    heroSubtitle.classList.remove('typing-active');
-                }, 1000);
-            }
-        };
-        
-        // Start typing after a short delay
-        setTimeout(typeWriter, 2000);
-    }
+    document.querySelectorAll('.reveal-up').forEach(el => revealObs.observe(el));
 
     // =================== STAT COUNTER ANIMATION ===================
     const animateStats = () => {
-        const statNumbers = document.querySelectorAll('.stat-number[data-count]');
-        
-        statNumbers.forEach(stat => {
-            const target = parseInt(stat.getAttribute('data-count'));
-            const duration = 2000;
-            const increment = target / (duration / 16);
+        document.querySelectorAll('.stat-number[data-count]').forEach(el => {
+            if (el.dataset.animated) return;
+            el.dataset.animated = '1';
+            const target = parseInt(el.dataset.count, 10);
+            const duration = 1600;
+            const step = target / (duration / 16);
             let current = 0;
-            
-            const updateCount = () => {
-                current += increment;
+
+            const tick = () => {
+                current += step;
                 if (current < target) {
-                    stat.textContent = Math.floor(current);
-                    requestAnimationFrame(updateCount);
+                    el.textContent = Math.floor(current);
+                    requestAnimationFrame(tick);
                 } else {
-                    stat.textContent = target + '+';
+                    el.textContent = target + '+';
                 }
             };
-            
-            updateCount();
+            tick();
         });
     };
 
-    // Trigger stat animation when about section is visible
-    const aboutSection = document.getElementById('about');
-    if (aboutSection) {
-        const statObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
+    const aboutEl = document.getElementById('about');
+    if (aboutEl) {
+        const statObs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
                     animateStats();
-                    statObserver.unobserve(entry.target);
+                    statObs.unobserve(e.target);
                 }
             });
         }, { threshold: 0.3 });
-        statObserver.observe(aboutSection);
+        statObs.observe(aboutEl);
     }
 
-    // =================== GITHUB PROJECTS INTEGRATION ===================
-    const loadGitHubProjects = async () => {
-        const projectsContainer = document.getElementById('github-projects');
-        if (!projectsContainer) return;
+    // =================== INTERACTIVE CARD GLOW (mouse-following) ===================
+    document.querySelectorAll('.card').forEach(card => {
+        const shine = card.querySelector('.card-shine');
+        if (!shine) return;
 
-        const username = 'Afra4509';
-        
-        // Fallback projects data (used when API fails or rate limited)
-        const fallbackProjects = [
-            {
-                name: 'PRANK-WIFI-SMADA',
-                description: 'Prank wifi dan ketika murid mulai menekan tombol pada log page, akan ada suara misterius',
-                language: 'C++',
-                html_url: 'https://github.com/Afra4509/PRANK-WIFI-SMADA',
-                homepage: 'https://afra4509.github.io/PRANK-WIFI-SMADA/',
-                stargazers_count: 0,
-                forks_count: 0,
-                topics: ['Arduino', 'C++']
-            },
-            {
-                name: 'aplikasi-klasifikasi-gorengan',
-                description: 'Teknologi tensorflow membuat kasir bisa mengklasifikasi gambar lalu mengeluarkan output harganya',
-                language: 'Python',
-                html_url: 'https://github.com/Afra4509/aplikasi-klasifikasi-gorengan',
-                homepage: 'https://aplikasi-klasifikasi-gorengan.streamlit.app/',
-                stargazers_count: 0,
-                forks_count: 0,
-                topics: ['Python', 'Machine Learning', 'Streamlit']
-            },
-            {
-                name: 'termodinamika',
-                description: 'Aplikasi ini bertujuan untuk menghitung atau sebagai kalkulator fisika yaitu termodinamika',
-                language: 'R',
-                html_url: 'https://github.com/Afra4509/termodinamika',
-                homepage: 'https://afra1502.shinyapps.io/fisikasenopati/',
-                stargazers_count: 0,
-                forks_count: 0,
-                topics: ['R', 'Statistics']
-            },
-            {
-                name: 'CekFollower',
-                description: 'Web ini digunakan untuk membandingkan siapa saja yang tidak memfollow balik instagram kita',
-                language: 'HTML',
-                html_url: 'https://github.com/Afra4509/CekFollower',
-                homepage: 'https://afra4509.github.io/CekFollower/',
-                stargazers_count: 0,
-                forks_count: 0,
-                topics: ['HTML', 'JavaScript']
-            },
-            {
-                name: 'afrachiper',
-                description: 'Web ini sebagai decrypt juga encrypt kode shift Cipher serta bruteforce',
-                language: 'HTML',
-                html_url: 'https://github.com/Afra4509/afrachiper',
-                homepage: 'https://afra4509.github.io/afrachiper/',
-                stargazers_count: 0,
-                forks_count: 0,
-                topics: ['Cryptography', 'JavaScript']
-            },
-            {
-                name: 'afra-fadhma-dinata',
-                description: 'Personal portfolio website showcasing my projects and skills',
-                language: 'HTML',
-                html_url: 'https://github.com/Afra4509/afra-fadhma-dinata',
-                homepage: 'https://afra4509.github.io/afra-fadhma-dinata/',
-                stargazers_count: 0,
-                forks_count: 0,
-                topics: ['Portfolio', 'HTML', 'CSS']
-            }
-        ];
-
-        const renderProjects = (repos) => {
-            projectsContainer.innerHTML = repos.map(repo => {
-                const languageClass = repo.language ? repo.language.toLowerCase().replace(/[^a-z]/g, '') : '';
-                const description = repo.description || 'No description available';
-                const homepage = repo.homepage;
-                
-                return `
-                    <div class="project-item card-neo">
-                        <div class="project-info">
-                            <div class="project-meta">
-                                ${repo.language ? `
-                                    <span class="project-language">
-                                        <span class="language-dot ${languageClass}"></span>
-                                        ${repo.language}
-                                    </span>
-                                ` : ''}
-                                <span><i class="fas fa-star"></i> ${repo.stargazers_count}</span>
-                                <span><i class="fas fa-code-branch"></i> ${repo.forks_count}</span>
-                            </div>
-                            <h3>${repo.name.replace(/-/g, ' ')}</h3>
-                            <p>${description}</p>
-                            <div class="project-tags">
-                                ${repo.topics && repo.topics.length > 0 
-                                    ? repo.topics.slice(0, 3).map(topic => `<span>${topic}</span>`).join('')
-                                    : repo.language ? `<span>${repo.language}</span>` : ''
-                                }
-                            </div>
-                            <div class="project-links">
-                                ${homepage ? `<a href="${homepage}" class="btn btn-sm" target="_blank"><i class="fas fa-external-link-alt"></i> Live Demo</a>` : ''}
-                                <a href="${repo.html_url}" class="btn btn-sm btn-outline" target="_blank"><i class="fab fa-github"></i> Source</a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            // Re-apply scroll reveal to new elements
-            const newCards = projectsContainer.querySelectorAll('.project-item');
-            newCards.forEach((card, idx) => {
-                card.style.opacity = '0';
-                card.style.animation = `slideUp 0.6s ease forwards ${0.1 + idx * 0.1}s`;
-            });
-        };
-        
-        try {
-            const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`);
-            
-            if (!response.ok) throw new Error('Failed to fetch');
-            
-            const repos = await response.json();
-            
-            // Check if rate limited
-            if (repos.message && repos.message.includes('rate limit')) {
-                throw new Error('Rate limited');
-            }
-            
-            // Filter out forked repos and the profile repo
-            const filteredRepos = repos.filter(repo => 
-                !repo.fork && repo.name !== username && repo.name !== `${username}.github.io`
-            ).slice(0, 6);
-
-            if (filteredRepos.length === 0) {
-                renderProjects(fallbackProjects);
-                return;
-            }
-
-            renderProjects(filteredRepos);
-
-        } catch (error) {
-            console.error('Error fetching GitHub repos, using fallback:', error);
-            // Use fallback projects when API fails
-            renderProjects(fallbackProjects);
-        }
-    };
-
-    // Load GitHub projects
-    loadGitHubProjects();
-
-    // Add button ripple effect
-    document.querySelectorAll('.btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            const rect = this.getBoundingClientRect();
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            
-            const ripple = document.createElement('span');
-            ripple.style.cssText = `
-                position: absolute;
-                background: rgba(255,255,255,0.3);
-                border-radius: 50%;
-                pointer-events: none;
-                width: 100px;
-                height: 100px;
-                left: ${x - 50}px;
-                top: ${y - 50}px;
-                transform: scale(0);
-                animation: ripple 0.6s ease-out;
-            `;
-            
-            this.style.position = 'relative';
-            this.style.overflow = 'hidden';
-            this.appendChild(ripple);
-            
-            setTimeout(() => ripple.remove(), 600);
+            shine.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(255,255,255,0.06), transparent 40%)`;
+            shine.style.opacity = '1';
+        });
+
+        card.addEventListener('mouseleave', () => {
+            shine.style.opacity = '0';
         });
     });
 
-    // Add CSS for ripple animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
+    // =================== EMAILJS INIT ===================
+    if (typeof emailjs !== 'undefined') {
+        emailjs.init('CWMC8v90lTidiLI6O');
+    }
+
+    // =================== CONTACT FORM (EmailJS) ===================
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const feedback = document.getElementById('formFeedback');
+
+    const showFeedback = (type, message) => {
+        feedback.className = 'form-feedback show ' + type;
+        feedback.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>${message}`;
+        
+        if (type === 'success') {
+            setTimeout(() => {
+                feedback.classList.remove('show');
+                setTimeout(() => { feedback.className = 'form-feedback'; }, 400);
+            }, 5000);
         }
-    `;
-    document.head.appendChild(style);
+    };
+
+    const setLoading = (loading) => {
+        submitBtn.disabled = loading;
+        submitBtn.classList.toggle('loading', loading);
+    };
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Gather values
+            const name = document.getElementById('cf-name').value.trim();
+            const email = document.getElementById('cf-email').value.trim();
+            const title = document.getElementById('cf-subject').value.trim();
+            const message = document.getElementById('cf-message').value.trim();
+
+            // Basic validation
+            if (!name || !email || !message) {
+                showFeedback('error', 'Please fill in all required fields.');
+                return;
+            }
+
+            // Email format check
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showFeedback('error', 'Please enter a valid email address.');
+                return;
+            }
+
+            // Clear previous feedback
+            feedback.className = 'form-feedback';
+            setLoading(true);
+
+            try {
+                // Add auto-generated time field for the template
+                const timeInput = document.createElement('input');
+                timeInput.type = 'hidden';
+                timeInput.name = 'time';
+                timeInput.value = new Date().toLocaleString('en-US', {
+                    dateStyle: 'full', timeStyle: 'short'
+                });
+                contactForm.appendChild(timeInput);
+
+                const result = await emailjs.sendForm(
+                    'service_laqjruc',
+                    'template_36bqmac',
+                    contactForm
+                );
+
+                // Remove the temporary time input
+                timeInput.remove();
+
+                if (result.status === 200) {
+                    contactForm.reset();
+                    showFeedback('success', 'Message sent successfully! I\'ll get back to you soon.');
+                } else {
+                    showFeedback('error', 'Something went wrong. Please try again.');
+                }
+            } catch (err) {
+                console.error('EmailJS error:', err);
+                // Fallback to mailto
+                const sub = encodeURIComponent('[Portfolio] ' + (title || 'New Message'));
+                const body = encodeURIComponent(`From: ${name} <${email}>\n\n${message}`);
+                window.location.href = `mailto:afrafadmadinata@gmail.com?subject=${sub}&body=${body}`;
+                contactForm.reset();
+                showFeedback('success', 'Opening your email client as fallback...');
+            }
+
+            setLoading(false);
+        });
+    }
+
+    // =================== GITHUB PROJECTS ===================
+    const langColors = {
+        'Python': '#3572A5', 'C++': '#f34b7d', 'JavaScript': '#f1e05a',
+        'HTML': '#e34c26', 'CSS': '#563d7c', 'R': '#198CE7',
+        'TypeScript': '#3178c6', 'Java': '#b07219', 'C': '#555555'
+    };
+
+    const fallbackProjects = [
+        {
+            name: 'PRANK-WIFI-SMADA',
+            description: 'Captive portal prank with mysterious sound effects triggered on interaction. Built with Arduino and C++.',
+            language: 'C++',
+            html_url: 'https://github.com/Afra4509/PRANK-WIFI-SMADA',
+            homepage: 'https://afra4509.github.io/PRANK-WIFI-SMADA/'
+        },
+        {
+            name: 'aplikasi-klasifikasi-gorengan',
+            description: 'TensorFlow-powered intelligent cashier — classifies fried food images and outputs pricing automatically.',
+            language: 'Python',
+            html_url: 'https://github.com/Afra4509/aplikasi-klasifikasi-gorengan',
+            homepage: 'https://aplikasi-klasifikasi-gorengan.streamlit.app/'
+        },
+        {
+            name: 'termodinamika',
+            description: 'Physics computation app for thermodynamics formulas. Built with R and Shiny for interactive calculations.',
+            language: 'R',
+            html_url: 'https://github.com/Afra4509/termodinamika',
+            homepage: 'https://afra1502.shinyapps.io/fisikasenopati/'
+        },
+        {
+            name: 'CekFollower',
+            description: 'Web tool to compare Instagram followers and find who doesn\'t follow you back.',
+            language: 'HTML',
+            html_url: 'https://github.com/Afra4509/CekFollower',
+            homepage: 'https://afra4509.github.io/CekFollower/'
+        },
+        {
+            name: 'afrachiper',
+            description: 'Shift cipher encryption/decryption tool with brute-force capability. Built with vanilla JavaScript.',
+            language: 'HTML',
+            html_url: 'https://github.com/Afra4509/afrachiper',
+            homepage: 'https://afra4509.github.io/afrachiper/'
+        },
+        {
+            name: 'afra-fadhma-dinata',
+            description: 'Personal portfolio website showcasing projects, skills, and engineering philosophy.',
+            language: 'HTML',
+            html_url: 'https://github.com/Afra4509/afra-fadhma-dinata',
+            homepage: 'https://afra4509.github.io/afra-fadhma-dinata/'
+        }
+    ];
+
+    const renderProjects = (repos) => {
+        const container = document.getElementById('github-projects');
+        if (!container) return;
+
+        container.innerHTML = `<div class="projects-grid">${repos.map((repo, idx) => {
+            const color = langColors[repo.language] || '#888';
+            const name = repo.name.replace(/-/g, ' ');
+            const desc = repo.description || 'No description provided.';
+
+            return `
+                <a href="${repo.html_url}" target="_blank" class="project-card reveal-up" style="transition-delay: ${idx * 0.1}s;">
+                    <div>
+                        <h3 class="project-title">${name}</h3>
+                        <p class="project-desc">${desc}</p>
+                    </div>
+                    <div class="project-footer">
+                        <div class="project-lang">
+                            <span class="lang-dot" style="background:${color};box-shadow:0 0 8px ${color}40;"></span>
+                            <span>${repo.language || 'Code'}</span>
+                        </div>
+                        <span class="project-link">View →</span>
+                    </div>
+                </a>`;
+        }).join('')}</div>`;
+
+        // Re-observe for scroll reveal
+        setTimeout(() => {
+            container.querySelectorAll('.reveal-up').forEach(el => revealObs.observe(el));
+        }, 50);
+    };
+
+    (async () => {
+        try {
+            const res = await fetch('https://api.github.com/users/Afra4509/repos?sort=updated&per_page=10');
+            if (!res.ok) throw new Error('API error');
+            const data = await res.json();
+            if (data.message) throw new Error(data.message);
+
+            const filtered = data
+                .filter(r => !r.fork && r.name !== 'Afra4509' && !r.name.includes('.github.io'))
+                .slice(0, 6);
+
+            renderProjects(filtered.length ? filtered : fallbackProjects);
+        } catch {
+            renderProjects(fallbackProjects);
+        }
+    })();
+
+    // =================== SMOOTH ANCHOR SCROLLING ===================
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            e.preventDefault();
+            const id = a.getAttribute('href');
+            if (id === '#') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+            const target = document.querySelector(id);
+            if (target) {
+                const offset = 80;
+                const top = target.getBoundingClientRect().top + window.scrollY - offset;
+                window.scrollTo({ top, behavior: 'smooth' });
+            }
+        });
+    });
+
+    // =================== MOBILE NAV TOGGLE ===================
+    const toggle = document.getElementById('navToggle');
+    const menu = document.getElementById('navMenu');
+
+    if (toggle && menu) {
+        toggle.addEventListener('click', () => {
+            toggle.classList.toggle('active');
+            menu.classList.toggle('active');
+        });
+
+        menu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                toggle.classList.remove('active');
+                menu.classList.remove('active');
+            });
+        });
+    }
 });
