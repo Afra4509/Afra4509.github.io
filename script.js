@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // Start Hero Animation Timeline (Overlapping with preloader fade out)
       .from('.nav-wrapper', { y: -50, opacity: 0, duration: 0.8, ease: 'back.out(1.5)' }, '-=0.6')
-      .from('.status-badge', { y: -20, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.6')
+      .from('.hero-terminal', { y: -20, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.6')
       .from('.hero-heading', { y: 50, rotation: 2, opacity: 0, duration: 1.2, ease: 'power4.out' }, '-=0.4')
       .from('.hero-sub', { y: 30, opacity: 0, duration: 1, ease: 'power3.out' }, '-=0.8')
       .fromTo('.hero-cta a', 
@@ -50,7 +50,59 @@ document.addEventListener('DOMContentLoaded', () => {
           '-=0.7'
       )
       .from('.hero-shape-1', { scale: 0, rotation: -45, opacity: 0, duration: 1.5, ease: 'elastic.out(1, 0.3)' }, '-=0.8');
+
+      // Start typing animation after preloader
+      startTypingAnimation();
     });
+
+    // =================== TYPING ANIMATION ===================
+    function startTypingAnimation() {
+        const phrases = [
+            'console.log("Hello, World!")',
+            'while (alive) { code(); }',
+            'git commit -m "ship it 🚀"',
+            'npm run build — success ✓',
+            '// crafting digital magic...',
+            'sudo make me_a_website',
+        ];
+        const el = document.getElementById('typingText');
+        if (!el) return;
+
+        let phraseIdx = 0;
+        let charIdx = 0;
+        let isDeleting = false;
+        let pauseMs = 0;
+
+        function tick() {
+            const current = phrases[phraseIdx];
+            
+            if (pauseMs > 0) {
+                pauseMs -= 50;
+                setTimeout(tick, 50);
+                return;
+            }
+
+            if (!isDeleting) {
+                el.textContent = current.substring(0, charIdx + 1);
+                charIdx++;
+                if (charIdx >= current.length) {
+                    isDeleting = true;
+                    pauseMs = 2000; // pause before deleting
+                }
+                setTimeout(tick, 60 + Math.random() * 40);
+            } else {
+                el.textContent = current.substring(0, charIdx - 1);
+                charIdx--;
+                if (charIdx <= 0) {
+                    isDeleting = false;
+                    phraseIdx = (phraseIdx + 1) % phrases.length;
+                }
+                setTimeout(tick, 30);
+            }
+        }
+        // Small delay before first type starts
+        setTimeout(tick, 600);
+    }
 
     // =================== SCROLL REVEAL ===================
     document.querySelectorAll('.reveal').forEach(el => {
@@ -105,11 +157,12 @@ document.addEventListener('DOMContentLoaded', () => {
         navLinks.forEach(link => link.classList.toggle('active', link.dataset.section === current));
     }, { passive: true });
 
-    // =================== GITHUB PROJECTS ===================
+    // =================== GITHUB PROJECTS CAROUSEL ===================
     const langIcons = {
         'Python': 'devicon-python-plain', 'C++': 'devicon-cplusplus-plain', 'JavaScript': 'devicon-javascript-plain',
         'HTML': 'devicon-html5-plain', 'CSS': 'devicon-css3-plain', 'R': 'devicon-r-original',
-        'TypeScript': 'devicon-typescript-plain', 'Java': 'devicon-java-plain', 'C': 'devicon-c-plain'
+        'TypeScript': 'devicon-typescript-plain', 'Java': 'devicon-java-plain', 'C': 'devicon-c-plain',
+        'Shell': 'devicon-bash-plain', 'Jupyter Notebook': 'devicon-jupyter-plain'
     };
 
     const fallbackProjects = [
@@ -121,51 +174,142 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'afra-fadhma-dinata', description: 'This portfolio website.', language: 'HTML', html_url: 'https://github.com/Afra4509/afra-fadhma-dinata' }
     ];
 
-    const renderProjects = (repos) => {
-        const container = document.getElementById('projectsContainer');
-        if (!container) return;
+    const buildCardHTML = (repo) => {
+        const iconClass = langIcons[repo.language] || 'devicon-github-original';
+        const name = repo.name.replace(/-/g, ' ');
+        const desc = repo.description || 'Cool internal side-project built with passion.';
+        return `
+            <a href="${repo.html_url}" target="_blank" class="project-card">
+                <div class="project-header">
+                    <div class="project-icon"><i class="${iconClass}" style="font-size:28px;color:var(--accent-3);"></i></div>
+                    <svg class="project-link-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                </div>
+                <h3 class="project-name">${name}</h3>
+                <p class="project-description">${desc}</p>
+                <div class="project-footer">${repo.language || 'Code'}</div>
+            </a>`;
+    };
 
-        container.innerHTML = repos.map((repo, idx) => {
-            const iconClass = langIcons[repo.language] || 'devicon-github-original';
-            const name = repo.name.replace(/-/g, ' ');
-            const desc = repo.description || 'Cool internal side-project built with passion.';
+    const initCarousel = (repos) => {
+        const loading = document.getElementById('projectsLoading');
+        const track = document.getElementById('carouselTrack');
+        const dotsEl = document.getElementById('carouselDots');
+        const counter = document.getElementById('carouselCounter');
+        const prevBtn = document.getElementById('carouselPrev');
+        const nextBtn = document.getElementById('carouselNext');
+        const wrapper = document.getElementById('projectsCarouselWrapper');
+        if (!track) return;
 
-            return `
-                <a href="${repo.html_url}" target="_blank" class="project-card reveal">
-                    <div class="project-header">
-                        <div class="project-icon"><i class="${iconClass}" style="font-size: 28px; color: var(--accent-3);"></i></div>
-                        <svg class="project-link-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                    </div>
-                    <h3 class="project-name">${name}</h3>
-                    <p class="project-description">${desc}</p>
-                    <div class="project-footer">
-                        ${repo.language || 'Code'}
-                    </div>
-                </a>`;
-        }).join('');
+        // Hide loading, populate track
+        if (loading) loading.style.display = 'none';
+        track.innerHTML = repos.map(buildCardHTML).join('');
 
-        // Apply scroll trigger to the newly generated cards
-        document.querySelectorAll('#projectsContainer .reveal').forEach(el => {
-            gsap.set(el, { y: 40, opacity: 0 });
-            gsap.to(el, {
-                y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
-                scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }
+        const getPerView = () => {
+            if (window.innerWidth <= 600) return 1;
+            if (window.innerWidth <= 900) return 2;
+            return 3;
+        };
+
+        let current = 0;
+        let autoTimer = null;
+        const total = repos.length;
+
+        const maxIndex = () => Math.max(0, total - getPerView());
+
+        const goTo = (idx) => {
+            const perView = getPerView();
+            current = Math.max(0, Math.min(idx, maxIndex()));
+
+            // Calculate px offset: card width + gap
+            const cards = track.querySelectorAll('.project-card');
+            if (!cards.length) return;
+            const cardW = cards[0].offsetWidth;
+            const gap = 24; // 1.5rem gap
+            track.style.transform = `translateX(-${current * (cardW + gap)}px)`;
+
+            // Dots
+            document.querySelectorAll('.carousel-dot').forEach((d, i) => {
+                d.classList.toggle('active', i === current);
             });
+
+            // Counter
+            if (counter) counter.textContent = `${current + 1} – ${Math.min(current + perView, total)} of ${total} repos`;
+
+            // Buttons
+            if (prevBtn) prevBtn.disabled = current === 0;
+            if (nextBtn) nextBtn.disabled = current >= maxIndex();
+        };
+
+        const next = () => goTo(current + 1 > maxIndex() ? 0 : current + 1);
+        const prev = () => goTo(current - 1 < 0 ? maxIndex() : current - 1);
+
+        const startAuto = () => {
+            stopAuto();
+            autoTimer = setInterval(next, 4000);
+        };
+        const stopAuto = () => { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } };
+
+        // Build dots
+        if (dotsEl) {
+            dotsEl.innerHTML = repos.map((_, i) =>
+                `<button class="carousel-dot${i === 0 ? ' active' : ''}" data-idx="${i}" aria-label="Go to repo ${i+1}"></button>`
+            ).join('');
+            dotsEl.querySelectorAll('.carousel-dot').forEach(dot => {
+                dot.addEventListener('click', () => { goTo(+dot.dataset.idx); startAuto(); });
+            });
+        }
+
+        // Nav buttons
+        if (prevBtn) prevBtn.addEventListener('click', () => { prev(); startAuto(); });
+        if (nextBtn) nextBtn.addEventListener('click', () => { next(); startAuto(); });
+
+        // Keyboard
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') { prev(); startAuto(); }
+            if (e.key === 'ArrowRight') { next(); startAuto(); }
+        });
+
+        // Pause on hover
+        if (wrapper) {
+            wrapper.addEventListener('mouseenter', stopAuto);
+            wrapper.addEventListener('mouseleave', startAuto);
+        }
+
+        // Touch swipe
+        let touchStartX = 0;
+        track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+        track.addEventListener('touchend', e => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) { diff > 0 ? next() : prev(); startAuto(); }
+        });
+
+        // Recalculate on resize
+        window.addEventListener('resize', () => goTo(current), { passive: true });
+
+        // Init
+        goTo(0);
+        startAuto();
+
+        // Scroll reveal for wrapper
+        gsap.from('#projectsCarouselWrapper', {
+            y: 40, opacity: 0, duration: 0.8, ease: 'power3.out',
+            scrollTrigger: { trigger: '#projectsCarouselWrapper', start: 'top 85%', toggleActions: 'play none none none' }
         });
         ScrollTrigger.refresh();
     };
 
     (async () => {
         try {
-            const res = await fetch('https://api.github.com/users/Afra4509/repos?sort=updated&per_page=10');
+            const res = await fetch('https://api.github.com/users/Afra4509/repos?sort=updated&per_page=30');
             if (!res.ok) throw new Error();
             const data = await res.json();
             if (data.message) throw new Error();
-            const filtered = data.filter(r => !r.fork && r.name !== 'Afra4509' && !r.name.includes('.github.io')).slice(0, 6);
-            renderProjects(filtered.length ? filtered : fallbackProjects);
+            const filtered = data.filter(r => !r.fork && r.name !== 'Afra4509' && !r.name.includes('.github.io'));
+            initCarousel(filtered.length ? filtered : fallbackProjects);
         } catch {
-            renderProjects(fallbackProjects);
+            initCarousel(fallbackProjects);
         }
+
     })();
 
     // =================== EMAILJS ===================

@@ -1,30 +1,40 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" translate="no" data-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
     <title>Afra Fadhma Dinata — Software Engineer</title>
-    <link rel="icon" type="image/png" href="./foto/A.png?v=3">
-    <meta name="description" content="Software engineer crafting colorful, high-performance, and scalable digital experiences.">
+    <meta name="google-site-verification" content="BfAuLPua574Pd_IkVCcLT6TlE_LE-WL2NGDSNPd6D58" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./foto/A.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./foto/A.png">
+    <link rel="shortcut icon" href="./foto/A.png">
+    <link rel="apple-touch-icon" href="./foto/A.png">
+    <meta name="description"
+        content="Software engineer crafting colorful, high-performance, and scalable digital experiences.">
     <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <!-- Devicon -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
-    
+
     <!-- EmailJS -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    
+
     <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    
+
     <!-- Prevent FOUC -->
     <script>
-        (function(){
+        (function () {
             var t = localStorage.getItem('theme');
             if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', t);
@@ -32,6 +42,7 @@
     </script>
     <link rel="stylesheet" href="style.css?v=31">
 </head>
+
 <body>
     <!-- PRELOADER -->
     <div id="preloader" class="preloader">
@@ -55,7 +66,7 @@
 
     <!-- MAIN CONTENT (Hidden until preloader finishes) -->
     <main id="main-content" style="opacity: 0; visibility: hidden;">
-        
+
         <!-- NAV -->
         <div class="nav-wrapper">
             <nav class="nav" id="navbar">
@@ -68,8 +79,24 @@
                 </div>
                 <div class="nav-actions">
                     <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">
-                        <svg class="theme-icon icon-dark" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-                        <svg class="theme-icon icon-light" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                        <svg class="theme-icon icon-dark" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                        </svg>
+                        <svg class="theme-icon icon-light" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="4" />
+                            <path d="M12 2v2" />
+                            <path d="M12 20v2" />
+                            <path d="m4.93 4.93 1.41 1.41" />
+                            <path d="m17.66 17.66 1.41 1.41" />
+                            <path d="M2 12h2" />
+                            <path d="M20 12h2" />
+                            <path d="m6.34 17.66-1.41 1.41" />
+                            <path d="m19.07 4.93-1.41 1.41" />
+                        </svg>
                     </button>
                     <button class="menu-btn" id="menuToggle" aria-label="Toggle menu">
                         <span></span><span></span>
@@ -92,37 +119,42 @@
         <section class="hero" id="hero">
             <canvas id="hero-canvas"></canvas>
             <div class="hero-inner">
-                <div class="status-badge">
-                    <span class="status-dot"></span>
-                    Available for new opportunities
-                </div>
                 <h1 class="hero-heading">
-                    Crafting <span class="colorful-text">digital</span><br>
-                    experiences<span class="colorful-text">.</span>
+                    Afra <span class="colorful-text">Fadhma</span><br>
+                    Dinata<span class="colorful-text">.</span>
                 </h1>
-                <p class="hero-sub">I'm Afra Fadhma Dinata. A software engineer focused on building highly interactive, aesthetic, and scalable products.</p>
                 <div class="hero-cta">
                     <a href="#work" class="btn-primary">View Projects</a>
                     <a href="#contact" class="btn-outline">Let's Talk</a>
                 </div>
+                <div class="hero-terminal">
+                    <span class="terminal-prompt">$</span>
+                    <span class="terminal-text" id="typingText"></span>
+                    <span class="terminal-cursor">|</span>
+                </div>
             </div>
             <!-- Floating Elements in Hero -->
             <div class="float-el hero-shape-1">
-                <svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="40" stroke="url(#grad1)" stroke-width="8" stroke-dasharray="10 20"/></svg>
+                <svg viewBox="0 0 100 100" fill="none">
+                    <circle cx="50" cy="50" r="40" stroke="url(#grad1)" stroke-width="8" stroke-dasharray="10 20" />
+                </svg>
             </div>
             <div class="float-el hero-shape-2">
-                <svg viewBox="0 0 100 100" fill="none"><rect x="20" y="20" width="60" height="60" rx="15" stroke="url(#grad2)" stroke-width="6" transform="rotate(45 50 50)"/></svg>
+                <svg viewBox="0 0 100 100" fill="none">
+                    <rect x="20" y="20" width="60" height="60" rx="15" stroke="url(#grad2)" stroke-width="6"
+                        transform="rotate(45 50 50)" />
+                </svg>
             </div>
             <!-- SVG Gradients -->
             <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
-              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#ff00cc" />
-                <stop offset="100%" stop-color="#333399" />
-              </linearGradient>
-              <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#00f2fe" />
-                <stop offset="100%" stop-color="#4facfe" />
-              </linearGradient>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ff00cc" />
+                    <stop offset="100%" stop-color="#333399" />
+                </linearGradient>
+                <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00f2fe" />
+                    <stop offset="100%" stop-color="#4facfe" />
+                </linearGradient>
             </svg>
         </section>
 
@@ -132,12 +164,14 @@
                 <span class="section-tag">01 // About</span>
                 <h2 class="section-title">Driven by curiosity & design.</h2>
             </div>
-            
+
             <div class="about-container reveal">
                 <div class="about-text-area">
                     <h3 class="about-headline">I build systems that are fast, beautiful, and extremely reliable.</h3>
                     <p class="about-desc">
-                        My journey in software engineering is fueled by a passion for creating interfaces that aren't just functional, but genuinely delightful to use. I believe that great code should be invisible, leaving only a flawless experience.
+                        My journey in software engineering is fueled by a passion for creating interfaces that aren't
+                        just functional, but genuinely delightful to use. I believe that great code should be invisible,
+                        leaving only a flawless experience.
                     </p>
                     <div class="about-stats">
                         <div class="stat-item">
@@ -150,7 +184,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="about-visual-area">
                     <div class="image-wrapper">
                         <!-- User's photo -->
@@ -181,11 +215,30 @@
                 <span class="section-tag">02 // Work</span>
                 <h2 class="section-title">Selected Projects</h2>
             </div>
-            <div class="projects-grid" id="projectsContainer">
-                <div class="projects-loading">
+            <div class="projects-carousel-wrapper" id="projectsCarouselWrapper">
+                <div class="projects-loading" id="projectsLoading">
                     <div class="spinner"></div>
                     <span>Fetching from GitHub...</span>
                 </div>
+                <div class="carousel-nav">
+                    <button class="carousel-btn carousel-prev" id="carouselPrev" aria-label="Previous">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m15 18-6-6 6-6" />
+                        </svg>
+                    </button>
+                    <div class="carousel-track-container">
+                        <div class="carousel-track" id="carouselTrack"></div>
+                    </div>
+                    <button class="carousel-btn carousel-next" id="carouselNext" aria-label="Next">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m9 18 6-6-6-6" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="carousel-dots" id="carouselDots"></div>
+                <p class="carousel-counter" id="carouselCounter"></p>
             </div>
 
             <!-- GitHub Activity -->
@@ -194,7 +247,7 @@
                     <i class="devicon-github-original" style="font-size: 2rem;"></i>
                     <h3>My Open Source Journey</h3>
                 </div>
-                
+
                 <div class="github-stats">
                     <div class="github-stat-card">
                         <span class="github-stat-num" id="github-repos">--</span>
@@ -219,7 +272,7 @@
                 <span class="section-tag">03 // Stack</span>
                 <h2 class="section-title">Technologies I love</h2>
             </div>
-            
+
             <div class="marquee-container reveal">
                 <div class="marquee-track">
                     <!-- Original Set -->
@@ -235,7 +288,7 @@
                     <div class="stack-item"><i class="devicon-react-original"></i>React</div>
                     <div class="stack-item"><i class="devicon-git-plain"></i>Git</div>
                     <div class="stack-item"><i class="devicon-vscode-plain"></i>VS Code</div>
-                    
+
                     <!-- Duplicated Set for infinite scroll -->
                     <div class="stack-item"><i class="devicon-python-plain"></i>Python</div>
                     <div class="stack-item"><i class="devicon-cplusplus-plain"></i>C++</div>
@@ -264,7 +317,7 @@
                     <div class="stack-item"><i class="devicon-c-plain"></i>C</div>
                     <div class="stack-item"><i class="devicon-bash-plain"></i>Bash</div>
                     <div class="stack-item"><i class="devicon-linux-plain"></i>Linux</div>
-                    
+
                     <!-- Duplicated Set for infinite scroll -->
                     <div class="stack-item"><i class="devicon-tailwindcss-original"></i>Tailwind</div>
                     <div class="stack-item"><i class="devicon-nodejs-plain"></i>Node.js</div>
@@ -287,7 +340,7 @@
                     <span class="section-tag">04 // Contact</span>
                     <h2 class="section-title">Let's build something awesome.</h2>
                 </div>
-                
+
                 <form id="contactForm" class="contact-form" autocomplete="off">
                     <div class="form-duo">
                         <div class="form-field">
@@ -305,32 +358,49 @@
                     </div>
                     <div class="form-field">
                         <label for="cf-message">Message</label>
-                        <textarea id="cf-message" name="message" rows="4" placeholder="Tell me about your idea..." required></textarea>
+                        <textarea id="cf-message" name="message" rows="4" placeholder="Tell me about your idea..."
+                            required></textarea>
                     </div>
-                    
+
                     <div id="formFeedback" class="form-feedback" role="status"></div>
-                    
+
                     <button type="submit" class="btn-submit" id="submitBtn">
                         <span>Send Message</span>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                        </svg>
                     </button>
                 </form>
 
                 <!-- Social Icons -->
                 <div class="social-links">
-                    <a href="https://github.com/Afra4509" target="_blank" class="social-link social-github" aria-label="GitHub">
+                    <a href="https://github.com/Afra4509" target="_blank" class="social-link social-github"
+                        aria-label="GitHub">
                         <i class="devicon-github-original"></i> GitHub
                     </a>
-                    <a href="https://instagram.com/afrafdhma" target="_blank" class="social-link social-ig" aria-label="Instagram">
-                        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                    <a href="https://instagram.com/afrafdhma" target="_blank" class="social-link social-ig"
+                        aria-label="Instagram">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                        </svg>
                         Instagram
                     </a>
-                    <a href="https://id.linkedin.com/in/afra-fadhma-dinata-58a371314" target="_blank" class="social-link social-linkedin" aria-label="LinkedIn">
-                        <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    <a href="https://id.linkedin.com/in/afra-fadhma-dinata-58a371314" target="_blank"
+                        class="social-link social-linkedin" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                        </svg>
                         LinkedIn
                     </a>
                     <a href="mailto:afrafadmadinata@gmail.com" class="social-link social-email" aria-label="Email">
-                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                        </svg>
                         Email
                     </a>
                 </div>
@@ -346,4 +416,5 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="script.js?v=31"></script>
 </body>
+
 </html>
